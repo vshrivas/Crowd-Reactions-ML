@@ -1,7 +1,7 @@
 ﻿<Properties StartupConfiguration="{38190372-A757-498F-9F59-141F6B1CD960}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="EmotionDetectionApp/Program.cs">
     <Files>
-      <File FileName="EmotionDetectionApp/Program.cs" Line="82" Column="17" />
+      <File FileName="EmotionDetectionApp/Program.cs" Line="102" Column="34" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace CSHttpClientSample
@@ -31,11 +34,13 @@ namespace CSHttpClientSample
         {
             // Get the path and filename to process from the user.
             Console.WriteLine("Detect faces:");
-            Console.Write("Enter the path to an image with faces that you wish to analzye: ");
-            string imageFilePath = Console.ReadLine();
+            Console.Write("Enter paths to frames you wish to analyze: ");
+            string input = Console.ReadLine();
+            string[] paths = input.Split(',');
 
+            List<string> frames = new List<string>(paths);
             // Execute the REST API call.
-            MakeAnalysisRequest(imageFilePath);
+            MakeAnalysisRequest(frames);
 
             Console.WriteLine("\nPlease wait a moment for the results to appear. Then, press Enter to exit...\n");
             Console.ReadLine();
@@ -45,9 +50,11 @@ namespace CSHttpClientSample
         /// <summary>
         /// Gets the analysis of the specified image file by using the Computer Vision REST API.
         /// </summary>
-        /// <param name="imageFilePath">The image file.</param>
-        static async void MakeAnalysisRequest(string imageFilePath)
+        /// <param name="imageFilePath">List of image file paths.</param>
+        static async void MakeAnalysisRequest(List<string> frames)
         {
+            Queue resultQueue = new Queue();
+
             HttpClient client = new HttpClient();
 
             // Request headers.
@@ -61,25 +68,47 @@ namespace CSHttpClientSample
 
             HttpResponseMessage response;
 
-            // Request body. Posts a locally stored JPEG image.
-            byte[] byteData = GetImageAsByteArray(imageFilePath);
+            // producer 
+            while(frames.Count > 0) {
+                // get first frame
+                string imageFilePath = frames[0];
+                frames.RemoveAt(0);
 
-            using (ByteArrayContent content = new ByteArrayContent(byteData))
-            {
-                // This example uses content type "application/octet-stream".
-                // The other content types you can use are "application/json" and "multipart/form-data".
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                // grab frame (currently getting pic from file path)
+                var analysisTask = Task.Run(async () =>
+                {
+                    // Request body. Posts a locally stored JPEG image.
+                    byte[] byteData = GetImageAsByteArray(imageFilePath);
 
-                // Execute the REST API call.
-                response = await client.PostAsync(uri, content);
+                    using (ByteArrayContent content = new ByteArrayContent(byteData))
+                    {
+                        // This example uses content type "application/octet-stream".
+                        // The other content types you can use are "application/json" and "multipart/form-data".
+                        content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+                        // Execute the REST API call.
+                        response = await client.PostAsync(uri, content);
+
+                        return response;
+                    }
+                });
+
+                resultQueue.Enqueue(analysisTask);
+            }
+
+            // consumer
+            while(resultQueue.Count > 0) {
+                Task<HttpResponseMessage> analysisTask = (Task<HttpResponseMessage>)resultQueue.Dequeue();
+                HttpResponseMessage output = await analysisTask;
 
                 // Get the JSON response.
-                string contentString = await response.Content.ReadAsStringAsync();
+                string contentString = await output.Content.ReadAsStringAsync();
 
                 // Display the JSON response.
                 Console.WriteLine("\nResponse:\n");
                 Console.WriteLine(JsonPrettyPrint(contentString));
             }
+
         }
 
 

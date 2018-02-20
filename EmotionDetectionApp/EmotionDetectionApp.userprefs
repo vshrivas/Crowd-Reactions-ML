@@ -1,10 +1,8 @@
 ﻿<Properties StartupConfiguration="{38190372-A757-498F-9F59-141F6B1CD960}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="EmotionDetectionApp/BasicConsoleExample/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="EmotionDetectionApp/VideoFrameAnalyzer/FrameGrabber.cs">
     <Files>
-      <File FileName="EmotionDetectionApp/Program.cs" Line="74" Column="65" />
-      <File FileName="EmotionDetectionApp/VideoFrameAnalyzer/FrameGrabber.cs" Line="99" Column="69" />
-      <File FileName="EmotionDetectionApp/VideoFrameAnalyzer/ConcurrentLogger.cs" Line="70" Column="2" />
-      <File FileName="EmotionDetectionApp/BasicConsoleExample/Program.cs" Line="91" Column="2" />
+      <File FileName="EmotionDetectionApp/BasicConsoleExample/Program.cs" Line="46" Column="19" />
+      <File FileName="EmotionDetectionApp/VideoFrameAnalyzer/FrameGrabber.cs" Line="53" Column="18" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

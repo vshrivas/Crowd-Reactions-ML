@@ -1,0 +1,8 @@
+/Users/Julia1/Projects/EmotionDetectionApp/EmotionDetectionApp/obj/x86/Debug/EmotionDetectionApp.csproj.CoreCompileInputs.cache
+/Users/Julia1/Projects/EmotionDetectionApp/EmotionDetectionApp/bin/Debug/EmotionDetectionApp.exe
+/Users/Julia1/Projects/EmotionDetectionApp/EmotionDetectionApp/bin/Debug/EmotionDetectionApp.pdb
+/Users/Julia1/Projects/EmotionDetectionApp/EmotionDetectionApp/obj/x86/Debug/EmotionDetectionApp.exe
+/Users/Julia1/Projects/EmotionDetectionApp/EmotionDetectionApp/obj/x86/Debug/EmotionDetectionApp.pdb
+/Users/Julia1/Projects/EmotionDetectionApp/EmotionDetectionApp/obj/x86/Debug/EmotionDetectionApp.csprojResolveAssemblyReference.cache
+/Users/Julia1/Projects/EmotionDetectionApp/EmotionDetectionApp/bin/Debug/Newtonsoft.Json.dll
+/Users/Julia1/Projects/EmotionDetectionApp/EmotionDetectionApp/bin/Debug/Newtonsoft.Json.xml

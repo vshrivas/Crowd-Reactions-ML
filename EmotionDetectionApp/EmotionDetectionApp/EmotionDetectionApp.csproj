@@ -38,11 +38,25 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VideoFrameAnalyzer\FrameGrabber.cs" />
+    <Compile Include="VideoFrameAnalyzer\ConcurrentLogger.cs" />
+    <Compile Include="VideoFrameAnalyzer\VideoFrame.cs" />
+    <Compile Include="BasicConsoleExample\Program.cs" />
+    <Compile Include="BasicConsoleExample\Properties\AssemblyInfo.cs" />
+    <Compile Include="VideoFrameAnalyzer\Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="BasicConsoleExample\packages.config" />
+    <None Include="BasicConsoleExample\BasicConsoleSample.csproj" />
+    <None Include="BasicConsoleExample\App.config" />
+    <None Include="VideoFrameAnalyzer\packages.config" />
+    <None Include="VideoFrameAnalysis.sln" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="VideoFrameAnalyzer\" />
+    <Folder Include="BasicConsoleExample\" />
+    <Folder Include="BasicConsoleExample\Properties\" />
+    <Folder Include="VideoFrameAnalyzer\Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,23 +1,43 @@
-# Takes a URL for an image. Prints the emotions of the people in the image
+import argparse
+from scipy.misc import imsave
+import cognitive_face as CF
+import cv2
+from sys import platform
 
-subscription_key = "51fae3a010d1498d95a008972adb3547"
-assert subscription_key
+def recognize(key):
 
-face_api_url = "https://westus.api.cognitive.microsoft.com/face/v1.0/detect"
+  CF.Key.set(key) # set API key
 
-image_url = "https://how-old.net/Images/faces2/main007.jpg"
+  while True:
+    cap = cv2.VideoCapture(0)
+    ret, frame = cap.read()
+    if platform.startswith('win'): # for windows we don't display video due to camera issues
+      cap.release()
+    imsave('tmp.png', frame)
 
-import requests
-from IPython.display import HTML
+    result = CF.face.detect('tmp.png', attributes='emotion')
+    try:
+      for face in result:
+        emotion = face['faceAttributes']['emotion']
+        print(emotion)
+        if platform == 'darwin': # for mac we display the video, face bounding box, age & gender
+          rect = face['faceRectangle']
+          width = rect['width']
+          top = rect['top']
+          height = rect['height']
+          left = rect['left']
+          cv2.rectangle(frame, (left, top), (left + width, top + height),
+                        (0, 255, 0), 2)
+          cv2.imshow('Demo', frame)
 
-headers = { 'Ocp-Apim-Subscription-Key': subscription_key }
+    except not result:
+      continue
 
-params = {
-    'returnFaceAttributes': 'emotion',
-}
+    except KeyboardInterrupt:
+      cap.release()
+      cv2.destroyAllWindows()
 
-response = requests.post(face_api_url, params=params, headers=headers, json={"url": image_url})
-faces = response.json()
 
-for face in faces:
-    print(face['faceAttributes']['emotion'])
+if __name__ == '__main__':
+
+  recognize("51fae3a010d1498d95a008972adb3547")

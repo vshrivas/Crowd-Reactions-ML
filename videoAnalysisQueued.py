@@ -19,9 +19,9 @@ async def produce(queue):
     # put result in queue
     await queue.put(result)
 
-  except KeyboardInterrupt:
-    cap.release()
-    cv2.destroyAllWindows() 
+    except KeyboardInterrupt:
+      cap.release()
+      cv2.destroyAllWindows() 
 
   # if queue is full, await to put in item until empty spot opens up
   await queue.put(None)
@@ -48,13 +48,6 @@ async def consume(queue):
           cv2.rectangle(frame, (left, top), (left + width, top + height),
                         (0, 255, 0), 2)
           cv2.imshow('Demo', frame)
-
-    except not result:
-      continue
-
-    except KeyboardInterrupt:
-      cap.release()
-      cv2.destroyAllWindows()
 
 def recognize(key):
   CF.Key.set(key) # set API key

@@ -4,8 +4,10 @@ import cognitive_face as CF
 import cv2
 from sys import platform
 import asyncio
+import functools
 
 async def produce(queue):
+  loop = asyncio.get_event_loop()
   while True:
     try:
       # capture a frame from the camera
@@ -16,14 +18,14 @@ async def produce(queue):
       imsave('tmp.png', frame)
 
       # await for CF api call
-      result = await CF.face.detect('tmp.png', attributes='emotion')
+      result = await loop.run_in_executor(None, functools.partial(CF.face.detect, image='tmp.png', attributes='emotion'))
 
       # put result in queue
       await queue.put(result)
 
     except KeyboardInterrupt:
       cap.release()
-      cv2.destroyAllWindows() 
+      cv2.destroyAllWindows()
 
   # if queue is full, await to put in item until empty spot opens up
   await queue.put(None)
@@ -41,15 +43,15 @@ async def consume(queue):
       for face in item:
         emotion = face['faceAttributes']['emotion']
         print(emotion)
-        if platform == 'darwin': # for mac we display the video, face bounding box, age & gender
+        '''if platform == 'darwin': # for mac we display the video, face bounding box, age & gender
           rect = face['faceRectangle']
           width = rect['width']
           top = rect['top']
           height = rect['height']
           left = rect['left']
-          cv2.rectangle(frame, (left, top), (left + width, top + height),
-                        (0, 255, 0), 2)
-          cv2.imshow('Demo', frame)
+          cv2.rectangle(item, (left, top), (left + width, top + height), 
+            (0, 255, 0), 2)
+          cv2.imshow('Demo', item)'''
 
     except KeyboardInterrupt:
       cap.release()

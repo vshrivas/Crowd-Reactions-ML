@@ -2,6 +2,7 @@ import argparse
 from scipy.misc import imsave
 import cognitive_face as CF
 import cv2
+import imageio
 from sys import platform
 
 def recognize(key):
@@ -13,7 +14,7 @@ def recognize(key):
     ret, frame = cap.read()
     if platform.startswith('win'): # for windows we don't display video due to camera issues
       cap.release()
-    imsave('tmp.png', frame)
+    imageio.imwrite('tmp.png', frame)
 
     result = CF.face.detect('tmp.png', attributes='emotion')
     try:

@@ -4,6 +4,7 @@ import cognitive_face as CF
 import cv2
 from sys import platform
 import asyncio
+import imageio
 import functools
 
 async def produce(queue):
@@ -15,7 +16,7 @@ async def produce(queue):
       ret, frame = cap.read()
       if platform.startswith('win'): # for windows we don't display video due to camera issues
         cap.release()
-      imsave('tmp.png', frame)
+      imageio.imwrite('tmp.png', frame)
 
       # await for CF api call
       result = await loop.run_in_executor(None, functools.partial(CF.face.detect, image='tmp.png', attributes='emotion'))

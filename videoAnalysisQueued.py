@@ -3,21 +3,23 @@ from scipy.misc import imsave
 import cognitive_face as CF
 import cv2
 from sys import platform
+import asyncio
 
 async def produce(queue):
   while True:
-    # capture a frame from the camera
-    cap = cv2.VideoCapture(0)
-    ret, frame = cap.read()
-    if platform.startswith('win'): # for windows we don't display video due to camera issues
-      cap.release()
-    imsave('tmp.png', frame)
+    try:
+      # capture a frame from the camera
+      cap = cv2.VideoCapture(0)
+      ret, frame = cap.read()
+      if platform.startswith('win'): # for windows we don't display video due to camera issues
+        cap.release()
+      imsave('tmp.png', frame)
 
-    # await for CF api call
-    result = await CF.face.detect('tmp.png', attributes='emotion')
+      # await for CF api call
+      result = await CF.face.detect('tmp.png', attributes='emotion')
 
-    # put result in queue
-    await queue.put(result)
+      # put result in queue
+      await queue.put(result)
 
     except KeyboardInterrupt:
       cap.release()
@@ -48,6 +50,10 @@ async def consume(queue):
           cv2.rectangle(frame, (left, top), (left + width, top + height),
                         (0, 255, 0), 2)
           cv2.imshow('Demo', frame)
+
+    except KeyboardInterrupt:
+      cap.release()
+      cv2.destroyAllWindows() 
 
 def recognize(key):
   CF.Key.set(key) # set API key

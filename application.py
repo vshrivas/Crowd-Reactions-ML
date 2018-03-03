@@ -1,23 +1,29 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename
+import videoStream
 
 class Application: 
 
   # quits the application 
   def quit(self): 
     self.master.destroy()
-    print("Successfully exited application")
+    print("[INFO] Successfully exited application.")
 
   # starts the live camera feed
   def start_cam(self): 
-    print("Starting camera feed. You will need a webcam.")
+    print("[INFO] Starting camera feed. You will need a webcam.")
+    self.videoThread = videoStream.startCameraStream(self.video_label)
 
   # open a video file 
   def open_video(self):
-    print("Opening file.")
+    print("[INFO] Opening file.")
     filename = askopenfilename()
-    print("Filename being opened: " + filename)
+    if (filename == '' or not isinstance(filename, str)):
+      print("[WARN] No file selected.")
+      return
+    print("[INFO] Filename being opened: " + filename)
+    self.videoThread = videoStream.startVideoStream(self.video_label, filename)
 
   # create the control panel widgets  
   def buildControlPanel(self, master):
@@ -38,28 +44,40 @@ class Application:
     self.file_path_button.configure(command = lambda: self.open_video())
     self.file_path_button.grid(row = 0, column = 0)
 
-  def __init__(self,master): 
+  # initialize a label object inside the video display to allow video 
+  # streaming capability
+  def buildVideoDisplay(self, master):
+    # give weight to the rows and columns of this display 
+    for x in range(5): 
+      master.columnconfigure(x, weight = 1)
+    master.rowconfigure(0, weight = 1)
+    self.video_label = tk.Label(master)
+    self.video_label.grid(row = 0, columnspan = 6, sticky = "nesw")
+
+  def __init__(self,master, width, height): 
+    # the parent window
     self.master = master;
+  
+    # the thread running the video stream; initially set to None
+    self.videoThread = None;
     
     # create all of the main containers
 
     # the control panel
-    self.control_panel = tk.Frame(master, bg = 'white', width = 1200, height = 100)
+    self.control_panel = tk.Frame(master, bg = 'white', width = width, height = 100)
     self.control_panel.grid(row = 0, columnspan = 6)
     self.control_panel.grid_propagate(0)
     # the video display
-    self.video_display = tk.Frame(master, bg = 'blue', width = 600, height = 600)
+    self.video_display = tk.Frame(master, width = width/2, height = height - 100)
     self.video_display.grid(row = 1, columnspan = 3)
+    self.video_display.grid_propagate(0)
     # the graph display 
-    self.graph = tk.Frame(master, bg = 'red', width = 600, height = 600)
+    self.graph = tk.Frame(master, bg = 'red', width = width/2, height = height - 100)
     self.graph.grid(row = 1, column = 3, columnspan = 3)
+    self.graph.grid_propagate(0)
 
-    # build up each component of the ui
+    # create the widgets on the control panel
     self.buildControlPanel(self.control_panel)
-       
-  
-root = tk.Tk();
-root.title("Crowd Emotional Response");
-root.geometry('{}x{}'.format(1200,700))
-app = Application(root);
-root.mainloop();
+    
+    # set up the video display frame so that it can actually play video
+    self.buildVideoDisplay(self.video_display) 

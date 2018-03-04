@@ -4,6 +4,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import cv2
 import time
+import constants
 
 # a class that maintains a video streaming thread
 class VideoStreamThread: 
@@ -30,6 +31,10 @@ class VideoStreamThread:
       if(self.stopStreaming or self.sourceChanged):
         print("[INFO] Stopping stream from " + self.source)
         break
+      # save the image as a temporary picture and run emotion
+      # processing
+      imageio.imwrite(constants.TMP_IMG, frame)
+      self.crowdEmotion.processEmotion(constants.TMP_IMG)
       # convert the frame into a tkinter compatible image
       frame_image = ImageTk.PhotoImage(Image.fromarray(frame))
       # load the frame into the provided label
@@ -52,6 +57,10 @@ class VideoStreamThread:
       # capture the camera frame
       cap = cv2.VideoCapture(0)
       ret, frame = cap.read()
+      # save image as temporary picture and run emotion
+      # processing
+      imageio.imwrite(constants.TMP_IMG, frame)
+      self.crowdEmotion.processEmotion(constants.TMP_IMG)
       frame_image = ImageTk.PhotoImage(Image.fromarray(frame))
       # load the frame into the tkinter label
       label.config(image = frame_image)
@@ -82,7 +91,9 @@ class VideoStreamThread:
       return
 
   # creates a video stream thread that streams to a label
-  def __init__(self, label):
+  # also takes in a crowdEmotion object to run emotion processing
+  def __init__(self, label, crowdEmotion):
+    self.crowdEmotion = crowdEmotion
     # set the source of the video stream
     self.source = None
     # signal variable to indicate source change

@@ -3,6 +3,7 @@ import imageio
 import asyncio
 import functools
 import argparse
+import constants
 
 class CrowdEmotion:
   
@@ -13,11 +14,18 @@ class CrowdEmotion:
   # takes a filepath to an image, calls CF API on the
   # image, and then sets the emotional state 
   def processEmotion(self, filename):
-    return
+    result = CF.face.detect(filename, attributes = 'emotion')
+    try: 
+      for face in result: 
+        emotion = face['faceAttributes']['emotion']
+        # TODO: Figure out how exactly we want to aggregate this
+        # emotion data
+        self.emotion = emotion
+    except not result:
+      pass
 
   def __init__(self):
-    self.key = '51fae3a010d1498d95a008972adb3547'
     # set api key
-    CF.Key.set(self.key) 
+    CF.Key.set(constants.CF_KEY) 
     # initialize the emotion object
     self.emotion = None

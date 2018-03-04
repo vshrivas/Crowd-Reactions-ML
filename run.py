@@ -1,17 +1,12 @@
 import tkinter as tk
 from application import Application
-
-# Constants used in application setup
-# Dimensions of application window
-WIDTH = 1600
-HEIGHT = 900
-NAME = "Crowd Reactions"
+import constants
 
 # Start the application
 root = tk.Tk();
-root.title(NAME);
-root.geometry('{}x{}'.format(WIDTH, HEIGHT))
-app = Application(root, WIDTH, HEIGHT);
-print("[INFO] Application " + NAME + " has been started.")
+root.title(constants.NAME);
+root.geometry('{}x{}'.format(constants.WIDTH, constants.HEIGHT))
+app = Application(root, constants.WIDTH, constants.HEIGHT);
+print("[INFO] Application " + constants.NAME + " has been started.")
 root.mainloop();
 

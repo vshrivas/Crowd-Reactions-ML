@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename
 from videoStream import VideoStreamThread
+from crowdEmotion import CrowdEmotion
 import time
 
 class Application: 
@@ -94,6 +95,10 @@ class Application:
     # create the widgets on the control panel
     self.buildControlPanel(self.control_panel)
     
+    # set up the emotion processing object
+    self.crowdEmotion = CrowdEmotion() 
     # set up the video display frame so that it can actually play video
     self.buildVideoDisplay(self.video_display)
-    self.videoStream = VideoStreamThread(self.video_label) 
+    self.videoStream = VideoStreamThread(self.video_label, self.crowdEmotion)
+
+ 

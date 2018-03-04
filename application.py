@@ -4,6 +4,10 @@ from tkinter.filedialog import askopenfilename
 from videoStream import VideoStreamThread
 from crowdEmotion import CrowdEmotion
 import time
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 class Application: 
 
@@ -70,6 +74,20 @@ class Application:
     self.video_label = tk.Label(master)
     self.video_label.grid(row = 0, columnspan = 6, sticky = "nesw")
 
+  # initialize a basic graph in the graph display
+  def buildGraphDisplay(self, master):
+    # give weight to the rows and columns of this display
+    master.rowconfigure(0, weight = 1)
+    master.columnconfigure(0, weight = 1)
+    f = Figure(figsize = (5,5), dpi = 100)
+    a = f.add_subplot(111)
+    a.plot([1,2,3,4,5,6,7,8],[3,4,5,1,4,5,8,1])
+
+    canvas = FigureCanvasTkAgg(f, master)
+    canvas.show()
+    canvas.get_tk_widget().grid(row = 0, column = 0)
+
+
   def __init__(self,master, width, height): 
     # the parent window
     self.master = master;
@@ -97,8 +115,10 @@ class Application:
     
     # set up the emotion processing object
     self.crowdEmotion = CrowdEmotion() 
+    
     # set up the video display frame so that it can actually play video
     self.buildVideoDisplay(self.video_display)
     self.videoStream = VideoStreamThread(self.video_label, self.crowdEmotion)
 
- 
+    # set up the graph display frame so that it shows us a graph
+    self.buildGraphDisplay(self.graph) 

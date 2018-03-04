@@ -3,7 +3,7 @@ from application import Application
 
 # Constants used in application setup
 # Dimensions of application window
-WIDTH = 1800
+WIDTH = 1600
 HEIGHT = 900
 NAME = "Crowd Reactions"
 

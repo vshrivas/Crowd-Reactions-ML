@@ -1,29 +1,53 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename
-import videoStream
+from videoStream import VideoStreamThread
+from cameraStream import CameraStreamThread
+import time
 
 class Application: 
 
   # quits the application 
-  def quit(self): 
+  def quit(self):
+    # stop the video stream if there is one
+    if(self.videoThread != None):
+      self.videoThread.stopStream() 
+    # stop the GUI
     self.master.destroy()
     print("[INFO] Successfully exited application.")
+
+  # stops an existing video stream if one exists
+  def stopVideoStream(self):
+    # is a no-op if the current video thread doesn't exist
+    if(self.videoThread == None):
+      return
+    print("[INFO] Signalling to existing video stream to stop.")
+    self.videoThread.stopStream()
+    # sleep until the existing stream dies
+    while(True):
+      if(not self.videoThread.thread.is_alive()):
+        break
+      # TODO: this loop never actually ends 
+      time.sleep(1) 
+    self.videoThread = None
 
   # starts the live camera feed
   def start_cam(self): 
     print("[INFO] Starting camera feed. You will need a webcam.")
-    self.videoThread = videoStream.startCameraStream(self.video_label)
+    self.stopVideoStream()
+    self.videoThread = CameraStreamThread(self.video_label)
 
   # open a video file 
   def open_video(self):
     print("[INFO] Opening file.")
     filename = askopenfilename()
+    # do nothing if a filename isn't selected
     if (filename == '' or not isinstance(filename, str)):
       print("[WARN] No file selected.")
       return
+    self.stopVideoStream()       
     print("[INFO] Filename being opened: " + filename)
-    self.videoThread = videoStream.startVideoStream(self.video_label, filename)
+    self.videoThread = VideoStreamThread(filename, self.video_label)
 
   # create the control panel widgets  
   def buildControlPanel(self, master):

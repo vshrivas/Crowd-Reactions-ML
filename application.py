@@ -23,12 +23,6 @@ class Application:
       return
     print("[INFO] Signalling to existing video stream to stop.")
     self.videoThread.stopStream()
-    # sleep until the existing stream dies
-    while(True):
-      if(not self.videoThread.thread.is_alive()):
-        break
-      # TODO: this loop never actually ends 
-      time.sleep(1) 
     self.videoThread = None
 
   # starts the live camera feed

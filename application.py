@@ -2,7 +2,6 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename
 from videoStream import VideoStreamThread
-from cameraStream import CameraStreamThread
 import time
 
 class Application: 
@@ -10,8 +9,8 @@ class Application:
   # quits the application 
   def quit(self):
     # stop the video stream if there is one
-    if(self.videoThread != None):
-      self.videoThread.stopStream() 
+    if(self.videoStream != None):
+      self.videoStream.stopStream() 
     # stop the GUI
     self.master.destroy()
     print("[INFO] Successfully exited application.")
@@ -19,17 +18,16 @@ class Application:
   # stops an existing video stream if one exists
   def stopVideoStream(self):
     # is a no-op if the current video thread doesn't exist
-    if(self.videoThread == None):
+    if(self.videoStream == None):
       return
     print("[INFO] Signalling to existing video stream to stop.")
-    self.videoThread.stopStream()
-    self.videoThread = None
+    self.videoStream.stopStream()
+    self.videoStream = None
 
   # starts the live camera feed
   def start_cam(self): 
     print("[INFO] Starting camera feed. You will need a webcam.")
-    self.stopVideoStream()
-    self.videoThread = CameraStreamThread(self.video_label)
+    self.videoStream.setSource(0)
 
   # open a video file 
   def open_video(self):
@@ -39,9 +37,8 @@ class Application:
     if (filename == '' or not isinstance(filename, str)):
       print("[WARN] No file selected.")
       return
-    self.stopVideoStream()       
     print("[INFO] Filename being opened: " + filename)
-    self.videoThread = VideoStreamThread(filename, self.video_label)
+    self.videoStream.setSource(filename)
 
   # create the control panel widgets  
   def buildControlPanel(self, master):
@@ -98,4 +95,5 @@ class Application:
     self.buildControlPanel(self.control_panel)
     
     # set up the video display frame so that it can actually play video
-    self.buildVideoDisplay(self.video_display) 
+    self.buildVideoDisplay(self.video_display)
+    self.videoStream = VideoStreamThread(self.video_label) 

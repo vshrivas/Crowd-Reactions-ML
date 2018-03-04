@@ -57,6 +57,8 @@ class VideoStreamThread:
       label.config(image = frame_image)
       label.image = frame_image
 
+    cap.release()
+    cv2.destroyAllWindows()
     # change sources if that's why we exited the loop
     if self.sourceChanged:
       print("[INFO] Video source is now changing.")

@@ -66,28 +66,22 @@ class VideoStreamThread:
       # save the image as a temporary picture and run emotion
       # processing
       imageio.imwrite(constants.TMP_IMG, frame)
-      curr_emotion = self.crowdEmotion.processEmotion(constants.TMP_IMG)
-      if curr_emotion != None:
-        for i in range(len(curr_emotion)):
-          emotions_time[i].append(curr_emotion[i])
-
+      self.crowdEmotion.processEmotion(constants.TMP_IMG)
+      self.crowdEmotion.graphEmotion()
       # convert the frame into a tkinter compatible image
       frame_image = ImageTk.PhotoImage(Image.fromarray(frame))
 
       # load the frame into the provided label
       label.config(image = frame_image)
       label.image = frame_image
-    
+   
+    self.crowdEmotion.graphEmotion() 
     # if we exited the loop because the source changed, just  
     # start another stream with the correct source
     if self.sourceChanged: 
       print("[INFO] Video source is now changing.")
       self.startStream(label)
 
-
-    self.curr_app.graphEmotions(emotions_time)
-    
- 
 
   def streamCamera(self, label):
     print("[INFO] Beginning camera stream.")

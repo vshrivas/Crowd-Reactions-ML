@@ -39,16 +39,16 @@ class Application:
 
       # create the widgets on the control panel
       self.buildControlPanel(self.control_panel)
-      
+ 
+      # set up the graph display frame so that it shows us a graph
+      self.buildGraphDisplay(self.graph)
+ 
       # set up the emotion processing object
-      self.crowdEmotion = CrowdEmotion() 
+      self.crowdEmotion = CrowdEmotion(self.subplot, self.graph_canvas) 
       
       # set up the video display frame so that it can actually play video
       self.buildVideoDisplay(self.video_display)
       self.videoStream = VideoStreamThread(self.video_label, self.crowdEmotion)
-
-      # set up the graph display frame so that it shows us a graph
-      self.buildGraphDisplay(self.graph)
 
       # variables to store the graph 
       self.graph_canvas = None
@@ -141,37 +141,12 @@ class Application:
     master.columnconfigure(0, weight = 1)
     f = Figure(figsize = (5,5), dpi = 100)
     a = f.add_subplot(111)
-    self.a = a
-
+    self.subplot = a
+    # TODO: We should probably get rid of this placeholder graph
     a.plot([1,2,3,4,5,6,7,8],[3,4,5,1,4,5,8,1])
 
     canvas = FigureCanvasTkAgg(f, master)
     self.graph_canvas = canvas
     canvas.show()
     canvas.get_tk_widget().grid(row = 0, column = 0)
-
-
-  # For a video passed in by the user, this should be called
-  # to graph the actual points
-  def graphEmotions(emotions):
-
-    for emotion in emotions:
-
-      # TODO: instead of 100, use the time that the video
-      # ends 
-      if emotion != []:
-
-        if len(emotion) == 1:
-          emotion.append(0.0)
-
-        y_axis = np.linspace(0, 100, num=len(emotion))
-        self.a.plot(emotion, y_axis)
-
-      else:
-        print("[INFO] emotion not detected in video")
-
-    self.graph_canvas.show()
-    self.graph_canvas.get_tk_widget().grid(row = 0, column = 0)
-
-
 

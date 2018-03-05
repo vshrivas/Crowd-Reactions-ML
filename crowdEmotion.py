@@ -4,14 +4,23 @@ import asyncio
 import functools
 import argparse
 import constants
+import numpy as np 
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 class CrowdEmotion:
   
-  def __init__(self):
+  def __init__(self, subplot, canvas):
     # set api key
     CF.Key.set(constants.CF_KEY) 
-    # initialize the emotion object
+    # initialize the emotion objects
     self.emotion = None
+    self.agg_emotions = None
+    self.emotions_time = [[], [], [], [], [], [], [], []]
+    self.subplot = subplot
+    self.canvas = canvas
 
   # returns the current emotional state of the crowd
   def getCurrentEmotion(self):
@@ -48,9 +57,30 @@ class CrowdEmotion:
       for i in range(len(agg_emotions)):
         agg_emotions[i] /= num_faces
 
+      self.agg_emotions = agg_emotions
+      if self.agg_emotions != None:
+        for i in range(len(self.agg_emotions)):
+          self.emotions_time[i].append(self.agg_emotions[i])
+
       return agg_emotions
 
     except not result:
       return None
 
+  def graphEmotion(self):
+    print("[INFO] Updating graph.")
+    for emotion in self.emotions_time:
+      # TODO: instead of 100, use the time that the video ends
+      if emotion != []:
+        if(len(emotion) == 1):
+          emotion.append(0.0)
+        y_axis = np.linspace(0,100, num=len(emotion))
+        self.subplot.plot(emotion, y_axis)
+        # TODO: we need to scale the x and y axes to match this
+        # data range, otherwise it won't graph 
+        self.canvas.draw()
+      else:
+        print("[INFO] Emotion not detected in video.")
 
+      self.canvas.show()
+      self.canvas.get_tk_widget().grid(row = 0, column = 0)

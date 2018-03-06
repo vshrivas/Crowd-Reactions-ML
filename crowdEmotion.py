@@ -39,6 +39,7 @@ class CrowdEmotion:
     num_faces = 0
     result = CF.face.detect(filename, attributes = 'emotion')
     try: 
+      # agg emotions has emotion values at this instant
       for face in result: 
         emotion = face['faceAttributes']['emotion']
         agg_emotions[0] += emotion['anger']
@@ -70,6 +71,7 @@ class CrowdEmotion:
   def graphEmotion(self):
     print("[INFO] Updating graph.")
     for emotion in self.emotions_time:
+      print(emotion)
       # TODO: instead of 100, use the time that the video ends
       if emotion != []:
         if(len(emotion) == 1):

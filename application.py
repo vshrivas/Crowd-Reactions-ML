@@ -143,7 +143,7 @@ class Application:
     a = f.add_subplot(111)
     self.subplot = a
     # TODO: We should probably get rid of this placeholder graph
-    a.plot([1,2,3,4,5,6,7,8],[3,4,5,1,4,5,8,1])
+    #a.plot([1,2,3,4,5,6,7,8],[3,4,5,1,4,5,8,1])
 
     canvas = FigureCanvasTkAgg(f, master)
     self.graph_canvas = canvas

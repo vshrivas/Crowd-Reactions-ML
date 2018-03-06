@@ -100,6 +100,7 @@ class VideoStreamThread:
       # processing
       imageio.imwrite(constants.TMP_IMG, frame)
       self.crowdEmotion.processEmotion(constants.TMP_IMG)
+      self.crowdEmotion.graphEmotion()
       frame_image = ImageTk.PhotoImage(Image.fromarray(frame))
 
       # load the frame into the tkinter label

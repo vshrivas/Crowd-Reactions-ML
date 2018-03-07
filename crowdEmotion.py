@@ -70,17 +70,28 @@ class CrowdEmotion:
 
   def graphEmotion(self):
     print("[INFO] Updating graph.")
-    for emotion in self.emotions_time:
+
+    emotion_list = ['anger', 'contempt', 'disgust', 'fear', \
+    'happiness', 'neutral', 'sadness', 'surprise']
+
+    # Clear the previous figure in cases where this is called
+    # several times
+    self.subplot.cla() 
+
+    for i in range(len(self.emotions_time)):
+      emotion = self.emotions_time[i]
       print(emotion)
-      # TODO: instead of 100, use the time that the video ends
+
       if emotion != []:
+
         if(len(emotion) == 1):
           emotion.append(0.0)
-        y_axis = np.linspace(0,100, num=len(emotion))
-        self.subplot.plot(emotion, y_axis)
-        # TODO: we need to scale the x and y axes to match this
-        # data range, otherwise it won't graph 
+
+        x_axis = np.linspace(1,len(emotion), num=len(emotion))
+        self.subplot.plot(x_axis, emotion, label=emotion_list[i])
+        self.subplot.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         self.canvas.draw()
+
       else:
         print("[INFO] Emotion not detected in video.")
 

@@ -1,6 +1,6 @@
 # height and width of application window
-WIDTH = 1000
-HEIGHT = 600
+WIDTH = 1200
+HEIGHT = 700
 
 # name of application
 NAME = "Crowd Reactions"

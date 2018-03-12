@@ -149,8 +149,8 @@ class Application:
     # give weight to the rows and columns of this display
     master.rowconfigure(0, weight = 1)
     master.columnconfigure(0, weight = 1)
-    f = Figure(figsize = (5,5), dpi = 100)
-    a = f.add_subplot(111)
+    f = Figure(figsize = (6,6), dpi = 100)
+    a = f.add_axes([0.1,0.2, 0.8, 0.7])
     self.subplot = a
     self.figure = f
     canvas = FigureCanvasTkAgg(f, master)
@@ -174,6 +174,6 @@ class Application:
         x_axis = np.linspace(1, len(emotion), num = len(emotion))
         self.subplot.set_title("Crowd Emotion Over Time")
         self.subplot.plot(x_axis, emotion, label = emotionList[i])
-        self.subplot.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        self.subplot.legend(bbox_to_anchor=(0, -0.1), loc=2, ncol = int(len(emotionList)/2), borderaxespad=0.)
       elif self.videoPlaying:
         print("[WARN] Emotion not detected in video.")

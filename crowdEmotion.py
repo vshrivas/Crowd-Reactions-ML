@@ -12,15 +12,13 @@ from matplotlib.figure import Figure
 
 class CrowdEmotion:
   
-  def __init__(self, subplot, canvas):
+  def __init__(self):
     # set api key
     CF.Key.set(constants.CF_KEY) 
     # initialize the emotion objects
     self.emotion = None
     self.agg_emotions = None
     self.emotions_time = [[], [], [], [], [], [], [], []]
-    self.subplot = subplot
-    self.canvas = canvas
 
   # returns the current emotional state of the crowd
   def getCurrentEmotion(self):
@@ -67,33 +65,3 @@ class CrowdEmotion:
 
     except not result:
       return None
-
-  def graphEmotion(self):
-    print("[INFO] Updating graph.")
-
-    emotion_list = ['anger', 'contempt', 'disgust', 'fear', \
-    'happiness', 'neutral', 'sadness', 'surprise']
-
-    # Clear the previous figure in cases where this is called
-    # several times
-    self.subplot.cla() 
-
-    for i in range(len(self.emotions_time)):
-      emotion = self.emotions_time[i]
-      print(emotion)
-
-      if emotion != []:
-
-        if(len(emotion) == 1):
-          emotion.append(0.0)
-
-        x_axis = np.linspace(1,len(emotion), num=len(emotion))
-        self.subplot.plot(x_axis, emotion, label=emotion_list[i])
-        self.subplot.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-        self.canvas.draw()
-
-      else:
-        print("[INFO] Emotion not detected in video.")
-
-      self.canvas.show()
-      self.canvas.get_tk_widget().grid(row = 0, column = 0)

@@ -5,10 +5,15 @@ from videoStream import VideoStreamThread
 from crowdEmotion import CrowdEmotion
 import time
 import matplotlib
-matplotlib.use("TkAgg")
+import matplotlib.animation as animation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+from matplotlib import style
 import numpy as np
+
+# establish backend and settings for matplotlib
+matplotlib.use("TkAgg")
+style.use('ggplot')
 
 class Application: 
 
@@ -39,22 +44,25 @@ class Application:
 
       # create the widgets on the control panel
       self.buildControlPanel(self.control_panel)
+
+      # create the crowdEmotion object
+      self.crowdEmotion = CrowdEmotion()
  
       # set up the graph display frame so that it shows us a graph
       self.buildGraphDisplay(self.graph)
- 
-      # set up the emotion processing object
-      self.crowdEmotion = CrowdEmotion(self.subplot, self.graph_canvas) 
       
       # set up the video display frame so that it can actually play video
       self.buildVideoDisplay(self.video_display)
       self.videoStream = VideoStreamThread(self.video_label, self.crowdEmotion)
+      self.videoPlaying = False
 
       # variables to store the graph 
       self.graph_canvas = None
       self.a = None
 
-
+      # enable live udpates of the graph
+      self.graphAnimation = animation.FuncAnimation(self.figure, self.animateGraph, \
+          interval = 1000)
 
   # quits the application 
   def quit(self):
@@ -83,6 +91,7 @@ class Application:
   def start_cam(self): 
     print("[INFO] Starting camera feed. You will need a webcam.")
     self.videoStream.setSource(0)
+    self.videoPlaying = True
 
 
   # open a video file 
@@ -96,6 +105,7 @@ class Application:
       return
     print("[INFO] Filename being opened: " + filename)
     self.videoStream.setSource(filename)
+    self.videoPlaying = True
 
 
   # create the control panel widgets  
@@ -142,8 +152,28 @@ class Application:
     f = Figure(figsize = (5,5), dpi = 100)
     a = f.add_subplot(111)
     self.subplot = a
+    self.figure = f
     canvas = FigureCanvasTkAgg(f, master)
     self.graph_canvas = canvas
     canvas.show()
     canvas.get_tk_widget().grid(row = 0, column = 0)
 
+  def animateGraph(self, i):
+    emotionList = ['anger', 'contempt', 'disgust', 'fear', \
+     'happiness', 'neutral', 'sadness', 'surprise']
+
+    # clear the old graph lines
+    self.subplot.clear()
+
+    # plot the new emotion values
+    for i in range(len(self.crowdEmotion.emotions_time)):
+      emotion = self.crowdEmotion.emotions_time[i]
+      if emotion != []:
+        if (len (emotion) == 1):
+          emotion.append(0.0)
+        x_axis = np.linspace(1, len(emotion), num = len(emotion))
+        self.subplot.set_title("Crowd Emotion Over Time")
+        self.subplot.plot(x_axis, emotion, label = emotionList[i])
+        self.subplot.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+      elif self.videoPlaying:
+        print("[WARN] Emotion not detected in video.")

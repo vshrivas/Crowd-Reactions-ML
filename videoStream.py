@@ -67,7 +67,6 @@ class VideoStreamThread:
       # processing
       imageio.imwrite(constants.TMP_IMG, frame)
       self.crowdEmotion.processEmotion(constants.TMP_IMG)
-      self.crowdEmotion.graphEmotion()
       # convert the frame into a tkinter compatible image
       frame_image = ImageTk.PhotoImage(Image.fromarray(frame))
 
@@ -75,7 +74,6 @@ class VideoStreamThread:
       label.config(image = frame_image)
       label.image = frame_image
    
-    self.crowdEmotion.graphEmotion() 
     # if we exited the loop because the source changed, just  
     # start another stream with the correct source
     if self.sourceChanged: 
@@ -100,7 +98,6 @@ class VideoStreamThread:
       # processing
       imageio.imwrite(constants.TMP_IMG, frame)
       self.crowdEmotion.processEmotion(constants.TMP_IMG)
-      self.crowdEmotion.graphEmotion()
       frame_image = ImageTk.PhotoImage(Image.fromarray(frame))
 
       # load the frame into the tkinter label

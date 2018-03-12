@@ -68,7 +68,9 @@ class VideoStreamThread:
       imageio.imwrite(constants.TMP_IMG, frame)
       self.crowdEmotion.processEmotion(constants.TMP_IMG)
       # convert the frame into a tkinter compatible image
-      frame_image = ImageTk.PhotoImage(Image.fromarray(frame))
+      frame_image = Image.fromarray(frame)
+      frame_image = frame_image.resize((int(constants.WIDTH/2),int(constants.WIDTH/2)))
+      frame_image = ImageTk.PhotoImage(frame_image)
 
       # load the frame into the provided label
       label.config(image = frame_image)
@@ -99,6 +101,10 @@ class VideoStreamThread:
       imageio.imwrite(constants.TMP_IMG, frame)
       self.crowdEmotion.processEmotion(constants.TMP_IMG)
       frame_image = ImageTk.PhotoImage(Image.fromarray(frame))
+      # convert the frame into a tkinter compatible image
+      frame_image = Image.fromarray(frame)
+      frame_image = frame_image.resize((int(constants.WIDTH/2),int(constants.WIDTH/2)))
+      frame_image = ImageTk.PhotoImage(frame_image)
 
       # load the frame into the tkinter label
       label.config(image = frame_image)

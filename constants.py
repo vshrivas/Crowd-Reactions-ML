@@ -1,6 +1,8 @@
 # height and width of application window
 WIDTH = 1200
-HEIGHT = 700
+# height is set as a function of width to maintain readability
+# of the GUI
+HEIGHT = int(WIDTH/2) + 100
 
 # name of application
 NAME = "Crowd Reactions"

@@ -162,6 +162,9 @@ class Application:
     emotionList = ['anger', 'contempt', 'disgust', 'fear', \
      'happiness', 'neutral', 'sadness', 'surprise']
 
+    colors = ['red', 'orange', 'yellow', 'green', 'blue', \
+    'purple', 'pink', 'brown']
+
     # clear the old graph lines
     self.subplot.clear()
 
@@ -173,7 +176,7 @@ class Application:
           emotion.append(0.0)
         x_axis = np.linspace(1, len(emotion), num = len(emotion))
         self.subplot.set_title("Crowd Emotion Over Time")
-        self.subplot.plot(x_axis, emotion, label = emotionList[i])
+        self.subplot.plot(x_axis, emotion, label = emotionList[i], color=colors[i])
         self.subplot.legend(bbox_to_anchor=(0, -0.1), loc=2, ncol = int(len(emotionList)/2), borderaxespad=0.)
       elif self.videoPlaying:
         print("[WARN] Emotion not detected in video.")
